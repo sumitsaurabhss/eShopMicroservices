@@ -1,0 +1,269 @@
+version: '3.4'
+
+networks:
+  backend:
+
+services:
+  eureka-server:
+    container_name: eureka-server
+    image: steeltoeoss/eurekaserver:latest
+    restart: on-failure
+    hostname: eureka-server
+    networks:
+      - backend
+
+
+  rabbitmq:
+    image: rabbitmq:3.13-rc-management
+    container_name: rabbitmq
+    restart: on-failure
+    hostname: rabbit-server
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - backend
+
+  userdb:
+    container_name: userdb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: on-failure
+    hostname: userdb
+    depends_on:
+      - eureka-server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=P@ssw0rd121#
+      - Eureka__Client__ServiceUrl__DefaultZone=http://eureka-server:8761/eureka/
+    networks:
+      - backend
+    ports:
+      - 8002:1433
+    # volumes:
+    #   - './drive:/var/opt/mssql'
+
+
+  userapi:
+    container_name: userapi
+    image: ${DOCKER_REGISTRY-}userapi
+    restart: on-failure
+    hostname: userapi
+    build:
+      context: .
+      dockerfile: UserAPI/Dockerfile
+    depends_on:
+      - eureka-server
+    networks:
+      - backend
+    # ports:
+    #   - 8003:80
+    environment:
+      - DB_HOST=userdb
+      - DB_NAME=eshop_user
+      - DB_SA_PASSWORD=P@ssw0rd121#
+  
+      
+  productdb:
+    container_name: productdb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: on-failure
+    hostname: productdb
+    depends_on:
+      - eureka-server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=P@ssw0rd121#
+      - Eureka__Client__ServiceUrl__DefaultZone=http://eureka-server:8761/eureka/
+    networks:
+      - backend
+    ports:
+      - 8004:1433
+    # volumes:
+    #   - './drive:/var/opt/mssql'
+  
+      
+  productapi:
+    container_name: productapi
+    image: ${DOCKER_REGISTRY-}productapi
+    restart: on-failure
+    hostname: productapi
+    build:
+      context: .
+      dockerfile: ProductAPI/Dockerfile
+    depends_on:
+      - eureka-server
+    networks:
+      - backend
+    # ports:
+    #   - 8005:80
+    environment:
+      - DB_HOST=productdb
+      - DB_NAME=eshop_product
+      - DB_SA_PASSWORD=P@ssw0rd121#
+
+  
+  orderdb:
+    container_name: orderdb
+    image: mongo
+    restart: on-failure
+    hostname: orderdb
+    depends_on:
+      - eureka-server
+    environment:
+      - Eureka__Client__ServiceUrl__DefaultZone=http://eureka-server:8761/eureka/
+    ports:
+      - 8006:27017
+    # volumes:
+    #   - './mongodb_data_container:/data/db'
+    networks:
+      - backend
+
+
+  orderapi:
+    container_name: orderapi
+    image: ${DOCKER_REGISTRY-}orderapi
+    restart: on-failure
+    hostname: orderapi
+    build:
+      context: .
+      dockerfile: OrderAPI/Dockerfile
+    depends_on:
+      - eureka-server
+    networks:
+      - backend
+    # ports:
+    #   - 8007:80
+    environment:
+      - DB_HOST=orderdb
+      - DB_NAME=eshop_order
+  
+      
+  productdetailsdb:
+    container_name: productdetailsdb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: on-failure
+    hostname: productdetailsdb
+    depends_on:
+      - eureka-server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=P@ssw0rd121#
+      - Eureka__Client__ServiceUrl__DefaultZone=http://eureka-server:8761/eureka/
+    networks:
+      - backend
+    ports:
+      - 8008:1433
+    # volumes:
+    #   - './drive:/var/opt/mssql'
+
+
+  productdetailsapi:
+    container_name: productdetailsapi
+    image: ${DOCKER_REGISTRY-}productdetailsapi
+    restart: on-failure
+    hostname: productdetailsapi
+    build:
+      context: .
+      dockerfile: ProductDetailsAPI/Dockerfile
+    depends_on:
+      - eureka-server
+    networks:
+      - backend
+    # ports:
+    #   - 8009:80
+    environment:
+      - DB_HOST=productdetailsdb
+      - DB_NAME=eshop_productdetail
+  
+      
+  inventorydb:
+    container_name: inventorydb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: on-failure
+    hostname: inventorydb
+    depends_on:
+      - eureka-server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=P@ssw0rd121#
+      - Eureka__Client__ServiceUrl__DefaultZone=http://eureka-server:8761/eureka/
+    networks:
+      - backend
+    ports:
+      - 8010:1433
+    # volumes:
+    #   - './drive:/var/opt/mssql'
+
+
+  inventoryapi:
+    container_name: inventoryapi
+    image: ${DOCKER_REGISTRY-}inventoryapi
+    restart: on-failure
+    hostname: inventoryapi
+    build:
+      context: .
+      dockerfile: InventoryAPI/Dockerfile
+    depends_on:
+      - eureka-server
+    networks:
+      - backend
+    # ports:
+    #   - 8011:80
+    environment:
+      - DB_HOST=inventorydb
+      - DB_NAME=eshop_inventory
+  
+      
+  cartdb:
+    container_name: cartdb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: on-failure
+    hostname: cartdb
+    depends_on:
+      - eureka-server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=P@ssw0rd121#
+      - Eureka__Client__ServiceUrl__DefaultZone=http://eureka-server:8761/eureka/
+    networks:
+      - backend
+    ports:
+      - 8012:1433
+    # volumes:
+    #   - './drive:/var/opt/mssql'
+
+  cartapi:
+    container_name: cartapi
+    image: ${DOCKER_REGISTRY-}cartapi
+    restart: on-failure
+    hostname: cartapi
+    build:
+      context: .
+      dockerfile: CartAPI/Dockerfile
+    depends_on:
+      - eureka-server
+    networks:
+      - backend
+    # ports:
+    #   - 8013:80
+    environment:
+      - DB_HOST=cartdb
+      - DB_NAME=eshop_cart
+
+
+  apigateway:
+    container_name: apigateway
+    image: ${DOCKER_REGISTRY-}apigateway
+    restart: on-failure
+    hostname: apigateway
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    networks:
+      - backend
+    ports:
+      - 8001:80
+

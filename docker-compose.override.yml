@@ -1,0 +1,82 @@
+version: '3.4'
+
+services:
+  eureka-server:
+    environment:
+      - EUREKA_SERVER_ENABLE_SELF_PRESERVATION=false
+    ports:
+      - 8761:8761
+ 
+
+  userapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Eureka__Client__ServiceUrl__DefaultZone=http://eureka-server:8761/eureka/
+    ports:
+      - "80"
+    depends_on:
+      - eureka-server
+
+
+  productapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Eureka__Client__ServiceUrl__DefaultZone=http://eureka-server:8761/eureka/
+    ports:
+      - "80"
+    depends_on:
+      - eureka-server
+      - rabbitmq
+
+
+
+  orderapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Eureka__Client__ServiceUrl__DefaultZone=http://eureka-server:8761/eureka/
+    ports:
+      - "80"
+    depends_on:
+      - eureka-server
+      - rabbitmq
+
+
+
+  apigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - OcelotBaseUrl=http://localhost:8001
+      - Eureka__Client__ServiceUrl__DefaultZone=http://eureka-server:8761/eureka/
+    ports:
+      - "80"
+    depends_on:
+      - eureka-server
+      - userapi
+      - productapi
+      - orderapi
+    command: ["dotnet", "ApiGateway.dll"]
+
+
+
+
+  cartapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
+
+  inventoryapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
+
+  productdetailsapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+

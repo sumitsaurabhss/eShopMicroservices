@@ -1,0 +1,62 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "UpstreamPathTemplate": "/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamScheme": "http",
+      "ServiceName": "productapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true,
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "productapi",
+          "Port": 8005
+        }
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "UpstreamPathTemplate": "/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamScheme": "http",
+      "ServiceName": "userapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true,
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userapi",
+          "Port": 8003
+        }
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "UpstreamPathTemplate": "/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamScheme": "http",
+      "ServiceName": "orderapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UseServiceDiscovery": true,
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderapi",
+          "Port": 8007
+        }
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Host": "http://eureka-server:8761/eureka/",
+      "Type": "Eureka"
+    },
+    "BaseUrl": "http://localhost:8001"
+  }
+}

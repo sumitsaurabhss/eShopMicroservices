@@ -1,0 +1,109 @@
+name: dockercompose4750629031559795243
+services:
+  apigateway:
+    build:
+      context: F:\Asp.net\eShopMicroservices
+      dockerfile: ApiGateway/Dockerfile
+    container_name: api-gateway
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: apigateway
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 80
+        published: "8001"
+        protocol: tcp
+      - mode: ingress
+        target: 80
+        protocol: tcp
+  orderapi:
+    build:
+      context: F:\Asp.net\eShopMicroservices
+      dockerfile: OrderAPI/Dockerfile
+    container_name: order-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DB_HOST: orderdb
+      DB_NAME: eshop_order
+    image: orderapi
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 80
+        protocol: tcp
+  orderdb:
+    container_name: order-db
+    image: mongo
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 27017
+        published: "8005"
+        protocol: tcp
+  productapi:
+    build:
+      context: F:\Asp.net\eShopMicroservices
+      dockerfile: ProductAPI/Dockerfile
+    container_name: product-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DB_HOST: productdb
+      DB_NAME: eshop_product
+      DB_SA_PASSWORD: P@ssw0rd121#
+    image: productapi
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 80
+        protocol: tcp
+  productdb:
+    container_name: product-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: P@ssw0rd121#
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 1433
+        published: "8003"
+        protocol: tcp
+  userapi:
+    build:
+      context: F:\Asp.net\eShopMicroservices
+      dockerfile: UserAPI/Dockerfile
+    container_name: user-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DB_HOST: userdb
+      DB_NAME: eshop_user
+      DB_SA_PASSWORD: P@ssw0rd121#
+    image: userapi
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 80
+        protocol: tcp
+  userdb:
+    container_name: user-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: P@ssw0rd121#
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 1433
+        published: "8002"
+        protocol: tcp
+networks:
+  backend:
+    name: dockercompose4750629031559795243_backend

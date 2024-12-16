@@ -1,0 +1,220 @@
+name: dockercompose4750629031559795243
+services:
+  apigateway:
+    build:
+      context: F:\Asp.net\eShopMicroservices
+      dockerfile: ApiGateway/Dockerfile
+    command:
+      - dotnet
+      - ApiGateway.dll
+    container_name: apigateway
+    depends_on:
+      eureka-server:
+        condition: service_started
+        required: true
+      orderapi:
+        condition: service_started
+        required: true
+      productapi:
+        condition: service_started
+        required: true
+      userapi:
+        condition: service_started
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+      Eureka__Client__ServiceUrl__DefaultZone: http://eureka-server:8761/eureka/
+      OcelotBaseUrl: http://localhost:8001
+    hostname: apigateway
+    image: apigateway
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 80
+        published: "8001"
+        protocol: tcp
+      - mode: ingress
+        target: 80
+        protocol: tcp
+    restart: on-failure
+  eureka-server:
+    container_name: eureka-server
+    environment:
+      EUREKA_SERVER_ENABLE_SELF_PRESERVATION: "false"
+    hostname: eureka-server
+    image: steeltoeoss/eurekaserver:latest
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 8761
+        published: "8761"
+        protocol: tcp
+    restart: on-failure
+  orderapi:
+    build:
+      context: F:\Asp.net\eShopMicroservices
+      dockerfile: OrderAPI/Dockerfile
+    container_name: orderapi
+    depends_on:
+      eureka-server:
+        condition: service_started
+        required: true
+      rabbitmq:
+        condition: service_started
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DB_HOST: orderdb
+      DB_NAME: eshop_order
+      Eureka__Client__ServiceUrl__DefaultZone: http://eureka-server:8761/eureka/
+    hostname: orderapi
+    image: orderapi
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 80
+        protocol: tcp
+    restart: on-failure
+  orderdb:
+    container_name: orderdb
+    depends_on:
+      eureka-server:
+        condition: service_started
+        required: true
+    environment:
+      Eureka__Client__ServiceUrl__DefaultZone: http://eureka-server:8761/eureka/
+    hostname: orderdb
+    image: mongo
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 27017
+        published: "8006"
+        protocol: tcp
+    restart: on-failure
+  productapi:
+    build:
+      context: F:\Asp.net\eShopMicroservices
+      dockerfile: ProductAPI/Dockerfile
+    container_name: productapi
+    depends_on:
+      eureka-server:
+        condition: service_started
+        required: true
+      rabbitmq:
+        condition: service_started
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DB_HOST: productdb
+      DB_NAME: eshop_product
+      DB_SA_PASSWORD: P@ssw0rd121#
+      Eureka__Client__ServiceUrl__DefaultZone: http://eureka-server:8761/eureka/
+    hostname: productapi
+    image: productapi
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 80
+        protocol: tcp
+    restart: on-failure
+  productdb:
+    container_name: productdb
+    depends_on:
+      eureka-server:
+        condition: service_started
+        required: true
+    environment:
+      ACCEPT_EULA: "Y"
+      Eureka__Client__ServiceUrl__DefaultZone: http://eureka-server:8761/eureka/
+      MSSQL_SA_PASSWORD: P@ssw0rd121#
+    hostname: productdb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 1433
+        published: "8004"
+        protocol: tcp
+    restart: on-failure
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:3.13-rc-management
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 5672
+        published: "5672"
+        protocol: tcp
+      - mode: ingress
+        target: 15672
+        published: "15672"
+        protocol: tcp
+    restart: on-failure
+    volumes:
+      - type: bind
+        source: C:\Users\Veerbhadra\.docker-conf\rabbitmq\data
+        target: /var/lib/rabbitmq
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\Veerbhadra\.docker-conf\rabbitmq\log
+        target: /var/log/rabbitmq
+        bind:
+          create_host_path: true
+  userapi:
+    build:
+      context: F:\Asp.net\eShopMicroservices
+      dockerfile: UserAPI/Dockerfile
+    container_name: userapi
+    depends_on:
+      eureka-server:
+        condition: service_started
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DB_HOST: userdb
+      DB_NAME: eshop_user
+      DB_SA_PASSWORD: P@ssw0rd121#
+      Eureka__Client__ServiceUrl__DefaultZone: http://eureka-server:8761/eureka/
+    hostname: userapi
+    image: userapi
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 80
+        protocol: tcp
+    restart: on-failure
+  userdb:
+    container_name: userdb
+    depends_on:
+      eureka-server:
+        condition: service_started
+        required: true
+    environment:
+      ACCEPT_EULA: "Y"
+      Eureka__Client__ServiceUrl__DefaultZone: http://eureka-server:8761/eureka/
+      MSSQL_SA_PASSWORD: P@ssw0rd121#
+    hostname: userdb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 1433
+        published: "8002"
+        protocol: tcp
+    restart: on-failure
+networks:
+  backend:
+    name: dockercompose4750629031559795243_backend

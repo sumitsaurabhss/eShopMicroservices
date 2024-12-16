@@ -1,0 +1,54 @@
+name: dockercompose4750629031559795243
+services:
+  productapi:
+    build:
+      context: F:\Asp.net\eShopMicroservices
+      dockerfile: ProductAPI/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: productapi
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 80
+        protocol: tcp
+  userapi:
+    build:
+      context: F:\Asp.net\eShopMicroservices
+      dockerfile: UserAPI/Dockerfile
+    container_name: user-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DB_HOST: userdb
+      DB_NAME: user
+      DB_SA_PASSWORD: P@ssw0rd121#
+    image: userapi
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 80
+        published: "8002"
+        protocol: tcp
+      - mode: ingress
+        target: 80
+        protocol: tcp
+  userdb:
+    container_name: user-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: P@ssw0rd121#
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      backend: null
+    ports:
+      - mode: ingress
+        target: 1433
+        published: "8001"
+        protocol: tcp
+networks:
+  backend:
+    name: dockercompose4750629031559795243_backend
+  default:
+    name: dockercompose4750629031559795243_default

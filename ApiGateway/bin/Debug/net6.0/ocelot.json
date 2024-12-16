@@ -1,0 +1,454 @@
+{
+  "Routes": [
+    //Auth API
+    {
+      "UpstreamPathTemplate": "/api/Auth/register",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Auth/register",
+      "ServiceName": "userapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userapi",
+          "Port": 8003
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/Auth/login",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Auth/login",
+      "ServiceName": "userapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userapi",
+          "Port": 8003
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/Auth/AssignRole",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Auth/AssignRole",
+      "ServiceName": "userapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userapi",
+          "Port": 8003
+        }
+      ]
+    },
+
+    //User Api
+    {
+      "UpstreamPathTemplate": "/api/User",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/User",
+      "ServiceName": "userapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userapi",
+          "Port": 8003
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/User/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/User/{id}",
+      "ServiceName": "userapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userapi",
+          "Port": 8003
+        }
+      ]
+    },
+
+    //Product Api
+    {
+      "UpstreamPathTemplate": "/api/Product",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Product",
+      "ServiceName": "productapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8005
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/Product/{code}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Product/{code}",
+      "Key": "product",
+      "ServiceName": "productapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8005
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/Product/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Product/{id}",
+      "ServiceName": "productapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8005
+        }
+      ]
+    },
+
+    //Order Api
+    {
+      "UpstreamPathTemplate": "/api/Order",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Order",
+      "ServiceName": "orderapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderapi",
+          "Port": 8007
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/Order/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Order/{id}",
+      "ServiceName": "orderapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderapi",
+          "Port": 8007
+        }
+      ]
+    },
+
+    //Cart Api
+    {
+      "UpstreamPathTemplate": "/api/Cart",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Cart",
+      "ServiceName": "cartapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cartapi",
+          "Port": 8013
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/Cart/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Cart/{id}",
+      "ServiceName": "cartapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cartapi",
+          "Port": 8013
+        }
+      ]
+    },
+
+
+    //ProductDetails Api
+    {
+      "UpstreamPathTemplate": "/api/ProductDetails",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/ProductDetails",
+      "ServiceName": "productdetailsapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8009
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/ProductDetails/{code}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/ProductDetails/{code}",
+      "Key": "details",
+      "ServiceName": "productdetailsapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8009
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/ProductDetails/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/ProductDetails/{id}",
+      "ServiceName": "productdetailsapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8009
+        }
+      ]
+    },
+
+
+    //Inventory Api
+    {
+      "UpstreamPathTemplate": "/api/Inventory",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Inventory",
+      "ServiceName": "inventoryapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8011
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/Inventory/{code}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Inventory/{code}",
+      "ServiceName": "inventoryapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8011
+        }
+      ]
+    },
+
+    {
+      "UpstreamPathTemplate": "/api/Inventory/{id}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamPathTemplate": "/api/Inventory/{id}",
+      "ServiceName": "inventoryapi",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      //"QoSOptions": {
+      //  "ExceptionsAllowedBeforeBreaking": 2,
+      //  "DurationOfBreak": 60000,
+      //  "TimeoutValue": 2000
+      //},
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8011
+        }
+      ]
+    }
+  ],
+
+
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "product",
+        "details"
+      ],
+      "UpstreamPathTemplate": "/product/{code}",
+      "Aggregator": "ProductDetailsAggregator"
+    }
+  ],
+
+
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId",
+    //"AdministrationPath": "/administration",
+    "UseServiceDiscovery": true,
+    "ServiceDiscoveryProvider": {
+      "Type": "Eureka",
+      //"Host": "eureka-server",
+      //"Port": "8761"
+      "Host": "http://localhost:8761/eureka/"
+    },
+    "BaseUrl": "http://localhost:8001"
+  }
+}
